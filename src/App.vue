@@ -2,11 +2,12 @@
   <v-app>
     <v-content>
       <v-row justify="center">
-        <v-expansion-panels accordion>
+        <v-expansion-panels accordion multiple>
+          <beverage-search></beverage-search>
           <v-expansion-panel>
             <v-expansion-panel-header>
               <span class="accordion-header">
-                <div>Datum</div>
+                <div>📅 Datum</div>
                 <div>{{ datePicker }}</div>
               </span>
             </v-expansion-panel-header>
@@ -26,7 +27,7 @@
           <v-expansion-panel>
             <v-expansion-panel-header>
               <span class="accordion-header">
-                <div>Klockslag</div>
+                🕐 Tidpunkt
                 <div>{{ timePicker }}</div>
               </span>
             </v-expansion-panel-header>
@@ -48,9 +49,10 @@
 </template>
 
 <script>
+import BeverageSearch from "./components/BeverageSerach/BeverageSearch.vue";
 export default {
   name: "App",
-  components: {},
+  components: { BeverageSearch },
   data: () => ({
     timePicker: `${new Date().getHours()}:${new Date().getMinutes()}`,
     datePicker: new Date().toJSON().split("T")[0]
@@ -61,5 +63,8 @@ export default {
 .accordion-header {
   display: flex;
   justify-content: space-between;
+}
+.row {
+  margin: 0;
 }
 </style>
