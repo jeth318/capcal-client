@@ -73,7 +73,12 @@
 
 <script>
 import { performSearch } from "../../rest/systembolaget.resource.js";
+import { addBeveragesToDb } from "../../rest/rest.resource.js";
 export default {
+  props: {
+    date: { type: String, required: true },
+    time: { type: String, required: true }
+  },
   data: () => ({
     descriptionLimit: 60,
     entries: [],
@@ -84,7 +89,16 @@ export default {
   }),
   methods: {
     addBeverage() {
-      console.log(this.model);
+      const { namn, namn2, prisinklmoms, alkoholhalt, artikelid } = this.model || {};
+
+      const prettyModel = {
+        name: namn + " " + namn2,
+        alcohol: parseInt(alkoholhalt),
+        price: parseInt(prisinklmoms),
+        productId: artikelid,
+        consumedAt: this.parsedDate
+      };
+      addBeveragesToDb(prettyModel);
       this.model = null;
     },
     increaseCount() {
@@ -95,6 +109,19 @@ export default {
     }
   },
   computed: {
+    parsedDate() {
+        console.log('dateStringBef', dateString);
+        console.log('date', this.date)
+        console.log('time', this.time)
+      let dateString = this.date + "T";
+      dateString += this.time.split(".")[0].length === 1 ? `0${this.time}` : this.time;
+
+    
+    console.log('dateString', dateString);
+    console.log('new date', new Date(dateString));
+    
+      return new Date(dateString);
+    },
     fields() {
       if (!this.model) return [];
       console.log(this.model);

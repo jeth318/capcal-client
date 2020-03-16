@@ -3,7 +3,10 @@
     <v-content>
       <v-row justify="center">
         <v-expansion-panels accordion multiple>
-          <beverage-search></beverage-search>
+          <beverage-search
+            :date="datePicker"
+            :time="timePicker"
+          ></beverage-search>
           <v-expansion-panel>
             <v-expansion-panel-header>
               <span class="accordion-header">
@@ -19,7 +22,6 @@
                   show-current
                   locale="sv"
                   type="date"
-                  :events="enableEvents ? functionEvents : null"
                 ></v-date-picker>
               </v-row>
             </v-expansion-panel-content>
