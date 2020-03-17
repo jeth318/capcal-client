@@ -14,3 +14,14 @@ export const addBeveragesToDb = async data => {
   };
   return await axios(config);
 };
+
+export const getAllCaps = async () => {
+  const config = {
+    url: "http://localhost:4040/api/caps",
+    method: "GET",
+    headers: {
+      "Access-Control-Allow-Origin": "*"
+    }
+  };
+  return await axios(config);
+};

@@ -1,8 +1,6 @@
 <template>
   <v-card color="green lighten-0" width="100%" dark>
-    <v-card-text>
-      Hitta vad du precis sög i dig
-    </v-card-text>
+    <v-card-text>Hitta vad du precis sög i dig</v-card-text>
     <v-card-text>
       <v-autocomplete
         v-model="model"
@@ -24,14 +22,23 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-expand-transition>
-      <v-list v-if="model" class="green lighten-1">
-        <v-list-item v-for="(field, i) in fields" :key="i">
-          <v-list-item-content>
-            <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
-            <v-list-item-title v-text="field.value"></v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <div v-if="model" style="display: flex; justify-content: center;">
+        <div style="display: flex; position: relative">
+          <div style="width: 50%; height: 375px; width: 187.5px;">
+            <v-list height="375" class="green darken-2" style="font-size: 20px">
+              <v-list-item v-for="(field, i) in fields" :key="i">
+                <v-list-item-content>
+                  <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
+                  <v-list-item-title  v-text="field.value"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </div>
+          <div style="width: 50%; height: 375px; background-color: white;">
+            <img class="product-image" :src="productImage" />
+          </div>
+        </div>
+      </div>
     </v-expand-transition>
     <v-card-actions>
       <v-spacer fluid></v-spacer>
@@ -49,7 +56,7 @@
       </v-btn>
       <v-btn
         class="counter-button"
-        :disabled="!model || this.count === 0"
+        :disabled="!model || this.count === 1"
         dark
         fab
         color="blue"
@@ -72,7 +79,10 @@
 </template>
 
 <script>
-import { performSearch } from "../../rest/systembolaget.resource.js";
+import {
+  performSearch,
+  fetchProductImage
+} from "../../rest/systembolaget.resource.js";
 import { addBeveragesToDb } from "../../rest/rest.resource.js";
 export default {
   props: {
@@ -84,14 +94,17 @@ export default {
     entries: [],
     isLoading: false,
     model: null,
+    productImage: "",
     count: 1,
     search: null
   }),
   methods: {
     addBeverage() {
-      const { namn, namn2, prisinklmoms, alkoholhalt, artikelid } = this.model || {};
+      const { namn, namn2, prisinklmoms, alkoholhalt, artikelid } =
+        this.model || {};
 
       const prettyModel = {
+        count: this.count,
         name: namn + " " + namn2,
         alcohol: parseInt(alkoholhalt),
         price: parseInt(prisinklmoms),
@@ -100,26 +113,30 @@ export default {
       };
       addBeveragesToDb(prettyModel);
       this.model = null;
+      this.productImage = null;
+      this.count = 1;
     },
     increaseCount() {
       this.count = this.count + 1;
     },
     decreaseCount() {
       this.count = this.count >= 1 ? this.count - 1 : 0;
+    },
+    async onModelChange() {
+      if (!this.model) {
+        return null;
+      }
+      const response = await fetchProductImage(this.model.id);
+      this.productImage = response.data.imageUrl;
     }
   },
   computed: {
     parsedDate() {
-        console.log('dateStringBef', dateString);
-        console.log('date', this.date)
-        console.log('time', this.time)
       let dateString = this.date + "T";
-      dateString += this.time.split(".")[0].length === 1 ? `0${this.time}` : this.time;
+      dateString +=
+        this.time.split(":")[0].length === 1 ? `0${this.time}` : this.time;
+      console.log(dateString);
 
-    
-    console.log('dateString', dateString);
-    console.log('new date', new Date(dateString));
-    
       return new Date(dateString);
     },
     fields() {
@@ -152,22 +169,25 @@ export default {
         .filter(entry => !!entry.value);
     },
     items() {
-      return this.entries.map(entry => {
-        let Description =
-          entry.namn.length > this.descriptionLimit
-            ? entry.namn.slice(0, this.descriptionLimit) + "..."
-            : entry.namn;
+      return this.entries
+        .map(entry => {
+          let Description =
+            entry.namn.length > this.descriptionLimit
+              ? entry.namn.slice(0, this.descriptionLimit) + "..."
+              : entry.namn;
 
-        Description += ` ${entry.namn2} (${entry.forpackning.toLowerCase()}, ${
-          entry.alkoholhalt
-        }%, ${entry.volymiml / 1000} L)`;
+          Description += ` ${entry.namn2} (${entry.forpackning.toLowerCase()}`;
+          Description += `, ${entry.alkoholhalt}% `;
+          Description += `, ${entry.volymiml / 1000} L)`;
 
-        return Object.assign({}, entry, { Description });
-      });
+          return Object.assign({}, entry, { Description });
+        })
+        .filter(entry => entry.forpackning !== "Fat");
     }
   },
 
   watch: {
+    model: "onModelChange",
     async search(val) {
       // Items have already been loaded
       //if (this.items.length > 0) return;
@@ -191,4 +211,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.product-image {
+  height: 375px;
+  padding: 15px;
+  display: block; /* remove extra space below image */
+}
+</style>

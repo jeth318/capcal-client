@@ -3,20 +3,23 @@
     <v-content>
       <v-row justify="center">
         <v-expansion-panels accordion multiple>
-          <beverage-search
-            :date="datePicker"
-            :time="timePicker"
-          ></beverage-search>
+          <beverage-search :date="datePicker" :time="timePicker"></beverage-search>
           <v-expansion-panel>
             <v-expansion-panel-header>
-              <span class="accordion-header">
-                <div>📅 Datum</div>
-                <div>{{ datePicker }}</div>
-              </span>
+              <slot>
+                <div class="accordion-header-wrapper">
+                  <div class="accordion-header-text">
+                    <v-icon>mdi-clock</v-icon>
+                    <span style="margin-left: 10px">Datum och tidpunkt</span>
+                  </div>
+                  <div>{{ datePicker }} - {{ timePicker }}</div>
+                </div>
+              </slot>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-row justify="space-around">
                 <v-date-picker
+                  :max="today"
                   color="green lighten-1"
                   v-model="datePicker"
                   show-current
@@ -24,23 +27,31 @@
                   type="date"
                 ></v-date-picker>
               </v-row>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              <span class="accordion-header">
-                🕐 Tidpunkt
-                <div>{{ timePicker }}</div>
-              </span>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
               <v-row justify="center">
                 <v-time-picker
+                  :max="maxTime"
                   format="24hr"
                   locale="sv"
                   color="green lighten-1"
                   v-model="timePicker"
                 ></v-time-picker>
+              </v-row>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel :open="true">
+            <v-expansion-panel-header>
+              <slot>
+                <div class="accordion-header-wrapper">
+                  <div class="accordion-header-text">
+                    <v-icon>mdi-calendar</v-icon>
+                    <span style="margin-left: 10px">Konsumtionskalender</span>
+                  </div>
+                </div>
+              </slot>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-row justify="center">
+                <consumption-calendar></consumption-calendar>
               </v-row>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -51,21 +62,56 @@
 </template>
 
 <script>
-import BeverageSearch from "./components/BeverageSerach/BeverageSearch.vue";
+import BeverageSearch from "./components/beverage-search/beverage-search.vue";
+import ConsumptionCalendar from "./components/consumption-calendar/consumption-calendar.vue";
+
 export default {
   name: "App",
-  components: { BeverageSearch },
+  components: { BeverageSearch, ConsumptionCalendar },
   data: () => ({
-    timePicker: `${new Date().getHours()}:${new Date().getMinutes()}`,
-    datePicker: new Date().toJSON().split("T")[0]
-  })
+    timePicker: new Date().toLocaleTimeString().substr(0, 5),
+    datePicker: new Date().toJSON().split("T")[0],
+    today: new Date().toISOString(),
+    todayTime: new Date().toLocaleTimeString().substr(0, 8),
+    maxTime: new Date().toLocaleTimeString().substr(0, 8)
+  }),
+  mounted() {
+    setInterval(() => {
+      this.today = new Date().toISOString();
+    }, 1000 * 60);
+  },
+  methods: {
+    onDatePickerChange() {
+      console.log("dp change");
+      if (this.datePicker.split("T")[0] === this.today.split("T")[0]) {
+        this.maxTime = this.todayTime;
+        const timePickerMs = new Date(this.today.split("T")[0] + "T"+ this.timePicker).getTime();
+        const todayTimeMs = new Date(this.today.split("T")[0] + "T" + this.todayTime.substr(0, 5)).getTime();
+
+        if (timePickerMs > todayTimeMs) {
+          this.timePicker = new Date().toLocaleTimeString().substr(0, 8);
+        }
+      } else {
+        this.maxTime = undefined;
+      }
+    }
+  },
+  watch: {
+    datePicker: "onDatePickerChange"
+  }
 };
 </script>
 <style lang="css">
-.accordion-header {
+.accordion-header-wrapper {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
+
+.accordion-header-text:first-child {
+  margin-right: 10px;
+}
+
 .row {
   margin: 0;
 }
