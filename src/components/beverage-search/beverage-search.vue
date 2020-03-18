@@ -41,8 +41,9 @@
     </v-expand-transition>
     <v-card-actions>
       <v-spacer fluid></v-spacer>
+      <div style="width: 100%">
+
       <v-btn
-        class="counter-button"
         :disabled="!model"
         dark
         fab
@@ -50,11 +51,11 @@
         @click="increaseCount"
         height="40px"
         width="40px"
+        style="margin-right: 5px;"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-btn
-        class="counter-button"
         :disabled="!model || this.count === 1"
         dark
         fab
@@ -65,6 +66,7 @@
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
+      </div>
       <v-btn :disabled="!model" color="grey darken-3" @click="addBeverage">
         Lägg till {{ count }}
         <v-icon>mdi-add-circle</v-icon>
