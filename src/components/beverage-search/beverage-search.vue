@@ -1,6 +1,5 @@
 <template>
   <v-card color="green lighten-0" width="100%" dark>
-    <v-card-text>Hitta vad du precis sög i dig</v-card-text>
     <v-card-text>
       <v-autocomplete
         v-model="model"
@@ -22,14 +21,14 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-expand-transition>
-      <div v-if="model" style="display: flex; justify-content: center;">
+      <div v-if="model" style>
         <div style="display: flex; position: relative">
-          <div style="width: 50%; height: 375px; width: 187.5px;">
+          <div style="width: 50%; height: 375px; width: 50%;">
             <v-list height="375" class="green darken-2" style="font-size: 20px">
               <v-list-item v-for="(field, i) in fields" :key="i">
                 <v-list-item-content>
                   <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
-                  <v-list-item-title  v-text="field.value"></v-list-item-title>
+                  <v-list-item-title v-text="field.value"></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -115,6 +114,7 @@ export default {
       this.model = null;
       this.productImage = null;
       this.count = 1;
+      this.$root.$emit("caps_updated");
     },
     increaseCount() {
       this.count = this.count + 1;

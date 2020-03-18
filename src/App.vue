@@ -1,6 +1,21 @@
 <template>
   <v-app>
-    <v-content>
+    <v-content style="background-color: lightgrey">
+    <div style="padding: 20px; margin: 0;">
+    <div style="width: 100%; display: flex; justify-content: center">
+        <v-icon large>mdi-glass-wine-bottle</v-icon>
+        <v-icon large>mdi-glass-wine</v-icon>
+        <v-icon large>mdi-glass-cocktail</v-icon>
+        <v-icon large>mdi-glass-mug</v-icon>
+        <v-icon large>mdi-beer-outline</v-icon>
+    </div>
+    </div>
+      <div class="text-center ma-2;">
+        <v-snackbar absolute top color="purple" :timeout=3000 v-model="snackbar">
+          {{ text }}
+          <v-btn color="white" text @click="snackbar = false">Stäng</v-btn>
+        </v-snackbar>
+      </div>
       <v-row justify="center">
         <v-expansion-panels accordion multiple>
           <beverage-search :date="datePicker" :time="timePicker"></beverage-search>
@@ -69,6 +84,8 @@ export default {
   name: "App",
   components: { BeverageSearch, ConsumptionCalendar },
   data: () => ({
+    snackbar: false,
+    text: "Ditt fyllo! Intaget har sparats och finns nu synligt i konsumtionskalendern.",
     timePicker: new Date().toLocaleTimeString().substr(0, 5),
     datePicker: new Date().toJSON().split("T")[0],
     today: new Date().toISOString(),
@@ -79,14 +96,21 @@ export default {
     setInterval(() => {
       this.today = new Date().toISOString();
     }, 1000 * 60);
+    this.$root.$on("caps_updated", () => {
+      this.snackbar = true;
+    });
   },
   methods: {
     onDatePickerChange() {
       console.log("dp change");
       if (this.datePicker.split("T")[0] === this.today.split("T")[0]) {
         this.maxTime = this.todayTime;
-        const timePickerMs = new Date(this.today.split("T")[0] + "T"+ this.timePicker).getTime();
-        const todayTimeMs = new Date(this.today.split("T")[0] + "T" + this.todayTime.substr(0, 5)).getTime();
+        const timePickerMs = new Date(
+          this.today.split("T")[0] + "T" + this.timePicker
+        ).getTime();
+        const todayTimeMs = new Date(
+          this.today.split("T")[0] + "T" + this.todayTime.substr(0, 5)
+        ).getTime();
 
         if (timePickerMs > todayTimeMs) {
           this.timePicker = new Date().toLocaleTimeString().substr(0, 8);

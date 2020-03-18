@@ -29,8 +29,7 @@
         :event-overlap-threshold="30"
         :event-color="getEventColor"
         @change="getEvents"
-      >
-      </v-calendar>
+      ></v-calendar>
     </v-sheet>
   </div>
 </template>
@@ -70,6 +69,13 @@ export default {
       "Party"
     ]
   }),
+  mounted() {
+    this.$root.$on("caps_updated", () => {
+      console.log("Caps were updated");
+      this.getEvents();
+
+    });
+  },
   methods: {
     async getEvents() {
       const capsResponse = await getAllCaps();
@@ -105,15 +111,17 @@ export default {
       return parsedDate;
     },
     getDayCaps(date) {
-        return this.events.filter(event =>
+      return this.events.filter(event =>
         event.start.includes(this.parseDate(date))
       ).length;
     },
     getDayCosts(date) {
-      const caps = this.events.filter(event =>event.start.includes(this.parseDate(date)));
+      const caps = this.events.filter(event =>
+        event.start.includes(this.parseDate(date))
+      );
       console.log(caps);
-      
-      return caps.map(cap => cap.price).reduce((a, b) => a+b);
+
+      return caps.map(cap => cap.price).reduce((a, b) => a + b);
     },
     generateEventColor(alcohol) {
       if (alcohol <= 0.5) {
