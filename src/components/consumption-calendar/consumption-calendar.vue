@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>{{monthlyReport()}}</div>
     <v-sheet tile height="54" color="grey lighten-3" class="d-flex">
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
@@ -73,10 +74,23 @@ export default {
     this.$root.$on("caps_updated", () => {
       console.log("Caps were updated");
       this.getEvents();
-
     });
   },
+  computed: {
+    totalMoneySpent() {
+      let prices = [];
+      this.events.forEach(event => prices.push(event.price));
+      return prices.reduce((a, b) => a + b);
+    }
+  },
   methods: {
+    monthlyReport() {
+      const relevantDates = this.events
+        .map(event => event.start)
+        .map(date => date.split(" ")[0].split('-')[1]);
+
+      return relevantDates.map(date => date.split(" ")[0]);
+    },
     async getEvents() {
       const capsResponse = await getAllCaps();
       const caps = capsResponse.data;

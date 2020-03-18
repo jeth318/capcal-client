@@ -21,7 +21,7 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-expand-transition>
-      <div v-if="model" style>
+      <div v-if="model" style="overflow: hidden;">
         <div style="display: flex; position: relative">
           <div style="width: 50%; height: 375px; width: 50%;">
             <v-list height="375" class="green darken-2" style="font-size: 20px">
@@ -34,14 +34,17 @@
             </v-list>
           </div>
           <div style="width: 50%; height: 375px; background-color: white;">
-            <img class="product-image" :src="productImage" />
+            <img 
+            class="product-image" 
+            :class="{ 'product-image-visible': productImage }"
+            :src="productImage" />
           </div>
         </div>
       </div>
     </v-expand-transition>
     <v-card-actions>
       <v-spacer fluid></v-spacer>
-      <div style="width: 100%">
+      <div style="width: 100%;">
 
       <v-btn
         :disabled="!model"
@@ -202,7 +205,6 @@ export default {
       this.isLoading = true;
       try {
         const response = await performSearch(val);
-        console.log(response.data);
         this.entries = response.data;
         this.isLoading = false;
       } catch (error) {
@@ -215,8 +217,16 @@ export default {
 
 <style>
 .product-image {
-  height: 375px;
-  padding: 15px;
-  display: block; /* remove extra space below image */
+    height: 375px;
+    padding: 15px;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 3000px;
+}
+
+.product-image-visible {
+    left: 50%;
+    transition: all 1000ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 </style>
