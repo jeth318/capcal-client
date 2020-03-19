@@ -17,7 +17,21 @@
         placeholder="Börja skriva för att söka"
         prepend-icon="mdi-database-search"
         return-object
-      ></v-autocomplete>
+      >
+        <template v-slot:item="data">
+          <template>
+            <v-list-item-content>
+              <div style="display: flex; align-items: center;">
+                <div>
+                  <v-list-item-title>{{ data.item.namn}} ({{data.item.alkoholhalt}}%)</v-list-item-title>
+                  <v-list-item-subtitle> {{ data.item.namn2 }} {{ data.item.typ }}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{data.item.volymiml/1000}} L</v-list-item-subtitle>
+                </div>
+              </div>
+            </v-list-item-content>
+          </template>
+        </template>
+      </v-autocomplete>
     </v-card-text>
     <v-divider></v-divider>
     <v-expand-transition>
@@ -34,10 +48,11 @@
             </v-list>
           </div>
           <div style="width: 50%; height: 375px; background-color: white;">
-            <img 
-            class="product-image" 
-            :class="{ 'product-image-visible': productImage }"
-            :src="productImage" />
+            <img
+              class="product-image"
+              :class="{ 'product-image-visible': productImage }"
+              :src="productImage"
+            />
           </div>
         </div>
       </div>
@@ -45,30 +60,29 @@
     <v-card-actions>
       <v-spacer fluid></v-spacer>
       <div style="width: 100%;">
-
-      <v-btn
-        :disabled="!model"
-        dark
-        fab
-        color="pink"
-        @click="increaseCount"
-        height="40px"
-        width="40px"
-        style="margin-right: 5px;"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn
-        :disabled="!model || this.count === 1"
-        dark
-        fab
-        color="blue"
-        @click="decreaseCount"
-        height="40px"
-        width="40px"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
+        <v-btn
+          :disabled="!model"
+          dark
+          fab
+          color="pink"
+          @click="increaseCount"
+          height="40px"
+          width="40px"
+          style="margin-right: 5px;"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <v-btn
+          :disabled="!model || this.count === 1"
+          dark
+          fab
+          color="blue"
+          @click="decreaseCount"
+          height="40px"
+          width="40px"
+        >
+          <v-icon>mdi-minus</v-icon>
+        </v-btn>
       </div>
       <v-btn :disabled="!model" color="grey darken-3" @click="addBeverage">
         Lägg till {{ count }}
@@ -88,6 +102,21 @@ import {
   fetchProductImage
 } from "../../rest/systembolaget.resource.js";
 import { addBeveragesToDb } from "../../rest/rest.resource.js";
+
+const iconMap = {
+  Öl: {
+    Flaska: "mdi-bottle-vine",
+    Magnum: "mdi-glass-mug",
+    "PET-flaska": "mdi-glass-mug",
+    Burk: "mdi-glass-mug"
+  },
+  "Rött vin": {},
+  "Vitt vin": {},
+  Punsch: {}
+};
+
+console.log(iconMap);
+
 export default {
   props: {
     date: { type: String, required: true },
@@ -103,6 +132,11 @@ export default {
     search: null
   }),
   methods: {
+    getIcon(item) {
+      return iconMap[item.varugrupp]
+        ? iconMap[item.varugrupp][item.forpackning] || "mdi-glass-mug"
+        : "mdi-glass-mug";
+    },
     addBeverage() {
       const { namn, namn2, prisinklmoms, alkoholhalt, artikelid } =
         this.model || {};
@@ -181,10 +215,6 @@ export default {
               ? entry.namn.slice(0, this.descriptionLimit) + "..."
               : entry.namn;
 
-          Description += ` ${entry.namn2} (${entry.forpackning.toLowerCase()}`;
-          Description += `, ${entry.alkoholhalt}% `;
-          Description += `, ${entry.volymiml / 1000} L)`;
-
           return Object.assign({}, entry, { Description });
         })
         .filter(entry => entry.forpackning !== "Fat");
@@ -217,16 +247,16 @@ export default {
 
 <style>
 .product-image {
-    height: 375px;
-    padding: 15px;
-    display: block;
-    position: absolute;
-    top: 0px;
-    left: 3000px;
+  height: 375px;
+  padding: 15px;
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 3000px;
 }
 
 .product-image-visible {
-    left: 50%;
-    transition: all 1000ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  left: 50%;
+  transition: all 1000ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 </style>

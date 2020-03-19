@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>{{monthlyReport()}}</div>
     <v-sheet tile height="54" color="grey lighten-3" class="d-flex">
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
