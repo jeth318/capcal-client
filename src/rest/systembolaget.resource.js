@@ -14,5 +14,5 @@ export const performSearch = async data => {
 };
 
 export const fetchProductImage = async productId => {
-    return await axios('http://localhost:5555/products/image/' + productId);
-  };
+  return await axios("http://localhost:5555/products/image/" + productId);
+};
