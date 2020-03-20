@@ -4,7 +4,14 @@
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <v-select v-model="type" :items="types" dense outlined class="ma-2" label="type"></v-select>
+      <v-select
+        v-model="type"
+        :items="types"
+        dense
+        outlined
+        class="ma-2"
+        label="type"
+      ></v-select>
       <v-select
         v-model="mode"
         :items="modes"
@@ -86,7 +93,7 @@ export default {
     monthlyReport() {
       const relevantDates = this.events
         .map(event => event.start)
-        .map(date => date.split(" ")[0].split('-')[1]);
+        .map(date => date.split(" ")[0].split("-")[1]);
 
       return relevantDates.map(date => date.split(" ")[0]);
     },

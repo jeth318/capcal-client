@@ -23,9 +23,18 @@
             <v-list-item-content>
               <div style="display: flex; align-items: center;">
                 <div>
-                  <v-list-item-title>{{ data.item.namn}} ({{data.item.alkoholhalt}}%)</v-list-item-title>
-                  <v-list-item-subtitle> {{ data.item.namn2 }} {{ data.item.typ }}</v-list-item-subtitle>
-                  <v-list-item-subtitle>{{data.item.volymiml/1000}} L</v-list-item-subtitle>
+                  <v-list-item-title
+                    >{{ data.item.namn }} ({{
+                      data.item.alkoholhalt
+                    }}%)</v-list-item-title
+                  >
+                  <v-list-item-subtitle>
+                    {{ data.item.namn2 }}
+                    {{ data.item.typ }}</v-list-item-subtitle
+                  >
+                  <v-list-item-subtitle
+                    >{{ data.item.volymiml / 1000 }} L</v-list-item-subtitle
+                  >
                 </div>
               </div>
             </v-list-item-content>
@@ -41,7 +50,9 @@
             <v-list height="375" class="green darken-2" style="font-size: 20px">
               <v-list-item v-for="(field, i) in fields" :key="i">
                 <v-list-item-content>
-                  <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-text="field.key"
+                  ></v-list-item-subtitle>
                   <v-list-item-title v-text="field.value"></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
