@@ -1,10 +1,11 @@
 import axios from "axios";
+import { apiBaseUrl } from "./config";
 
 export const addBeveragesToDb = async data => {
   console.log("addBeveragesToDb");
 
   const config = {
-    url: "http://localhost:4040/api/caps",
+    url: `${apiBaseUrl}/api/caps`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,7 +18,7 @@ export const addBeveragesToDb = async data => {
 
 export const getAllCaps = async () => {
   const config = {
-    url: "http://localhost:4040/api/caps",
+    url: `${apiBaseUrl}/api/caps`,
     method: "GET",
     headers: {
       "Access-Control-Allow-Origin": "*"
