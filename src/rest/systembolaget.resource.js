@@ -1,9 +1,9 @@
 import axios from "axios";
-import { systembolagetApiBaseUrl } from './config';
+import { getSystembolagetApiBaseUrl } from './config';
 
 export const performSearch = async data => {
   const config = {
-    url: `${systembolagetApiBaseUrl}/products/custom`,
+    url: `${getSystembolagetApiBaseUrl()}/products/custom`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,6 +16,6 @@ export const performSearch = async data => {
 
 export const fetchProductImage = async productId => {
   return await axios(
-    `${systembolagetApiBaseUrl}/products/image/${productId}`
+    `${getSystembolagetApiBaseUrl()}/products/image/${productId}`
   );
 };

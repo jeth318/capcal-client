@@ -1,9 +1,9 @@
 import axios from "axios";
-import { apiBaseUrl } from "./config";
+import { getApiBaseUrl } from "./config";
 
 export const addBeveragesToDb = async data => {
   const config = {
-    url: `${apiBaseUrl}/api/caps`,
+    url: `${getApiBaseUrl()}/api/caps`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export const addBeveragesToDb = async data => {
 
 export const getAllCaps = async () => {
   const config = {
-    url: `${apiBaseUrl}/api/caps`,
+    url: `${getApiBaseUrl()}/api/caps`,
     method: "GET",
     headers: {
       "Access-Control-Allow-Origin": "*"
