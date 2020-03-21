@@ -2,8 +2,6 @@ import axios from "axios";
 import { apiBaseUrl } from "./config";
 
 export const addBeveragesToDb = async data => {
-  console.log("addBeveragesToDb");
-
   const config = {
     url: `${apiBaseUrl}/api/caps`,
     method: "POST",

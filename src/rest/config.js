@@ -2,9 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const {
-  VUE_APP_API_HOST = "localhost",
-  VUE_APP_API_PORT = "4040",
-  VUE_APP_API_PROTOCOL = "http"
+  VUE_APP_SYSTEMBOLAGET_API_HOST = "systembolaget-rest-api.jtdev.se",
+  VUE_APP_API_HOST = "capcal.jtdev.se",
+  VUE_APP_API_PROTOCOL = "https"
 } = process.env;
 
-export const apiBaseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_API_HOST}:${VUE_APP_API_PORT}`;
+export const apiBaseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_API_HOST}`;
+export const systembolagetApiBaseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_SYSTEMBOLAGET_API_HOST}`;

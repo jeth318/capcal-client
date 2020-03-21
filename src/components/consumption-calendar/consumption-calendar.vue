@@ -78,7 +78,6 @@ export default {
   }),
   mounted() {
     this.$root.$on("caps_updated", () => {
-      console.log("Caps were updated");
       this.getEvents();
     });
   },
@@ -139,8 +138,6 @@ export default {
       const caps = this.events.filter(event =>
         event.start.includes(this.parseDate(date))
       );
-      console.log(caps);
-
       return caps.map(cap => cap.price).reduce((a, b) => a + b);
     },
     generateEventColor(alcohol) {

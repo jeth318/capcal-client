@@ -108,10 +108,7 @@
 </template>
 
 <script>
-import {
-  performSearch,
-  fetchProductImage
-} from "../../rest/systembolaget.resource.js";
+import { performSearch } from "../../rest/systembolaget.resource.js";
 import { addBeveragesToDb } from "../../rest/rest.resource.js";
 
 const iconMap = {
@@ -125,8 +122,6 @@ const iconMap = {
   "Vitt vin": {},
   Punsch: {}
 };
-
-console.log(iconMap);
 
 export default {
   props: {
@@ -176,8 +171,8 @@ export default {
       if (!this.model) {
         return null;
       }
-      const response = await fetchProductImage(this.model.id);
-      this.productImage = response.data.imageUrl;
+      // const response = await fetchProductImage(this.model.id);
+      this.productImage = "";
     }
   },
   computed: {
@@ -185,13 +180,10 @@ export default {
       let dateString = this.date + "T";
       dateString +=
         this.time.split(":")[0].length === 1 ? `0${this.time}` : this.time;
-      console.log(dateString);
-
       return new Date(dateString);
     },
     fields() {
       if (!this.model) return [];
-      console.log(this.model);
       const {
         namn,
         namn2,
@@ -249,7 +241,7 @@ export default {
         this.entries = response.data;
         this.isLoading = false;
       } catch (error) {
-        console.error("ERROR!:", error);
+        // console.error("ERROR!:", error);
       }
     }
   }
