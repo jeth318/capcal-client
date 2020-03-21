@@ -11,16 +11,16 @@ const {
 } = process.env;
 
 export const getApiBaseUrl = () => {
-   let baseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_API_HOST}`;
-   if (VUE_APP_LOCALDEV) {
-       baseUrl += `:${VUE_APP_API_PORT}`;
-   }
-   return baseUrl;
+  let baseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_API_HOST}`;
+  if (VUE_APP_LOCALDEV) {
+    baseUrl += `:${VUE_APP_API_PORT}`;
+  }
+  return baseUrl;
 };
 export const getSystembolagetApiBaseUrl = () => {
-    let baseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_SYSTEMBOLAGET_API_HOST}`;
-    if (VUE_APP_LOCALDEV) {
-        baseUrl += `:${VUE_APP_SYSTEMBOLAGET_API_PORT}`;
-    }
-    return baseUrl;
+  let baseUrl = `${VUE_APP_API_PROTOCOL}://${VUE_APP_SYSTEMBOLAGET_API_HOST}`;
+  if (VUE_APP_LOCALDEV) {
+    baseUrl += `:${VUE_APP_SYSTEMBOLAGET_API_PORT}`;
+  }
+  return baseUrl;
 };

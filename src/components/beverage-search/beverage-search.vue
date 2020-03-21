@@ -108,7 +108,10 @@
 </template>
 
 <script>
-import { performSearch } from "../../rest/systembolaget.resource.js";
+import {
+  fetchProductImage,
+  performSearch
+} from "../../rest/systembolaget.resource.js";
 import { addBeveragesToDb } from "../../rest/rest.resource.js";
 
 const iconMap = {
@@ -171,8 +174,8 @@ export default {
       if (!this.model) {
         return null;
       }
-      // const response = await fetchProductImage(this.model.id);
-      this.productImage = "";
+      const response = await fetchProductImage(this.model.id);
+      this.productImage = response.data;
     }
   },
   computed: {
