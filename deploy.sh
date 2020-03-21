@@ -4,7 +4,7 @@ BRANCH_NAME=$1;
 
 
 if [[ $BRANCH_NAME == "master" ]]; then
-    cd /home/pi/Apps/calcal/client
+    cd /home/pi/Apps/capcal/client
 else
     exit 0;
 fi
