@@ -88,6 +88,7 @@
 <script>
 import BeverageSearch from "./components/beverage-search/beverage-search.vue";
 import ConsumptionCalendar from "./components/consumption-calendar/consumption-calendar.vue";
+import moment from 'moment';
 
 export default {
   name: "App",
@@ -96,15 +97,15 @@ export default {
     snackbar: false,
     text:
       "Ditt fyllo! Intaget har sparats och finns nu synligt i konsumtionskalendern.",
-    timePicker: new Date().toLocaleTimeString().substr(0, 5),
-    datePicker: new Date().toJSON().split("T")[0],
-    today: new Date().toISOString(),
-    todayTime: new Date().toLocaleTimeString().substr(0, 8),
-    maxTime: new Date().toLocaleTimeString().substr(0, 8)
+    timePicker: moment().format('hh:mm'),
+    datePicker: moment().format('YYYY-MM-DD'),
+    today: moment().format('YYYY-MM-DD'),
+    todayTime: moment().format('hh:mm'),
+    maxTime: moment().format('hh:mm')
   }),
   mounted() {
     setInterval(() => {
-      this.today = new Date().toISOString();
+      this.today = moment().format('YYYY-MM-DD');
     }, 1000 * 60);
     this.$root.$on("caps_updated", () => {
       this.snackbar = true;
@@ -112,18 +113,17 @@ export default {
   },
   methods: {
     onDatePickerChange() {
-      console.log("dp change");
-      if (this.datePicker.split("T")[0] === this.today.split("T")[0]) {
+      if (this.datePicker === this.today) {
         this.maxTime = this.todayTime;
         const timePickerMs = new Date(
           this.today.split("T")[0] + "T" + this.timePicker
         ).getTime();
         const todayTimeMs = new Date(
-          this.today.split("T")[0] + "T" + this.todayTime.substr(0, 5)
+          this.today.split("T")[0] + "T" + moment().format('hh:mm:ss')
         ).getTime();
 
         if (timePickerMs > todayTimeMs) {
-          this.timePicker = new Date().toLocaleTimeString().substr(0, 8);
+          this.timePicker = moment().format('hh:mm');
         }
       } else {
         this.maxTime = undefined;
