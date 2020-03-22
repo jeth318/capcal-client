@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getSystembolagetApiBaseUrl } from './config';
+import { getSystembolagetApiBaseUrl } from "./config";
+import https from "https";
 
 export const performSearch = async data => {
   const config = {
@@ -15,7 +16,11 @@ export const performSearch = async data => {
 };
 
 export const fetchProductImage = async productId => {
-  return await axios(
-    `${getSystembolagetApiBaseUrl()}/products/image/${productId}`
+  const agent = new https.Agent({
+    rejectUnauthorized: false
+  });
+  return await axios.get(
+    `${getSystembolagetApiBaseUrl()}/products/image/${productId}`,
+    { httpsAgent: agent }
   );
 };
