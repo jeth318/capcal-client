@@ -172,7 +172,7 @@ export default {
         return null;
       }
       const response = await fetchProductImage(this.model.id);
-      this.productImage = response.data;
+      this.productImage = response.data.imageUrl;
     }
   },
   computed: {
